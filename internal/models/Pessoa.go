@@ -68,7 +68,7 @@ func FindByPessoa(db *sql.DB, id string) (*Pessoa, error) {
 	return &p, nil
 }
 
-func Create(db *sql.DB, pessoa *Pessoa) error {
+func (pessoa *Pessoa) Create(db *sql.DB) error {
 	stmt, err := db.Prepare("INSERT INTO Pessoas (firstname,lastname,email,telefone,dt_nascimento) values (?,?,?,?,?)")
 	if err != nil {
 		panic(err)

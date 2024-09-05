@@ -1,21 +1,21 @@
 package Controller
 
 import (
-	"CrudGolang/internal/db"
 	"CrudGolang/internal/models"
+	"database/sql"
 	"fmt"
+	"time"
 )
 
-type PessoaController interface {
-	Index()
-	Show(id string)
-	Store(pessoa models.Pessoa) error
-	Update(pessoa models.Pessoa, id string) error
-	Destroy(id string) error
-}
+// type PessoaController interface {
+// 	Index()
+// 	Show(id string)
+// 	Store(pessoa models.Pessoa) error
+// 	Update(pessoa models.Pessoa, id string) error
+// 	Destroy(id string) error
+// }
 
-func Index() {
-	dbconexao := db.Conn("root@tcp(localhost:3306)/pessoa?parseTime=true")
+func Index(dbconexao *sql.DB) {
 	pessoas, err := models.IndexListPessoa(dbconexao)
 	if err != nil {
 		panic(err)
@@ -28,11 +28,11 @@ func Index() {
 		fmt.Println("Email: ", value.Email)
 		fmt.Println("Telefone: ", value.Telefone)
 		fmt.Println("Data de Nascimento: ", value.Dt_Nascimento)
+		fmt.Println("*******************************************************************************************")
 	}
 }
 
-func Show(id string) {
-	dbconexao := db.Conn("root@tcp(localhost:3306)/pessoa?parseTime=true")
+func Show(dbconexao *sql.DB, id string) {
 	pessoa, err := models.FindByPessoa(dbconexao, id)
 	if err != nil {
 		panic(err)
@@ -43,4 +43,11 @@ func Show(id string) {
 	fmt.Println("Email: ", pessoa.Email)
 	fmt.Println("Telefone: ", pessoa.Telefone)
 	fmt.Println("Data de Nascimento: ", pessoa.Dt_Nascimento)
+	fmt.Println("*******************************************************************************************")
+}
+
+func Store(dbconexao *sql.DB, firstname, lastname, email, telefone string, dt_nascimento time.Time) {
+	ps := models.NewPessoa(firstname, lastname, email, telefone, dt_nascimento)
+	ps.Create(dbconexao)
+	fmt.Println("Registro criado com sucesso!")
 }

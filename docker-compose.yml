@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # Senha para o usuário root
+      MYSQL_DATABASE: pessoa     # Nome do banco de dados padrão (opcional)
+      MYSQL_USER: crud_golang             # Nome de um novo usuário (opcional)
+      MYSQL_PASSWORD: crud_golang     # Senha para o novo usuário (opcional)
+    ports:
+      - "3307:3306"  # Mapeia a porta 3306 do container para a porta 3306 do host
+    volumes:
+      - ./db_data:/var/lib/mysql  # Volume persistente para dados do MySQL
+    networks:
+     - crud_golang
+
+
+volumes:
+  db_data:
+
+networks:
+  crud_golang:
+    driver: bridge  # O driver padrão para redes Docker

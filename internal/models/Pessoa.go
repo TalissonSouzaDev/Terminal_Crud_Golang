@@ -7,14 +7,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// type IPessoa interface {
-// 	IndexListPessoa(db *sql.DB) ([]Pessoa, error)
-// 	FindByPessoa(db *sql.DB, id string) (*Pessoa, error)
-// 	Create(db *sql.DB, pessoa *Pessoa) error
-// 	Update(db *sql.DB, pessoa *Pessoa) error
-// 	Delete(db *sql.DB, pessoa *Pessoa) error
-// }
-
 type Pessoa struct {
 	ID            string
 	FirstName     string
@@ -69,12 +61,12 @@ func FindByPessoa(db *sql.DB, id string) (*Pessoa, error) {
 }
 
 func (pessoa *Pessoa) Create(db *sql.DB) error {
-	stmt, err := db.Prepare("INSERT INTO Pessoas (firstname,lastname,email,telefone,dt_nascimento) values (?,?,?,?,?)")
+	stmt, err := db.Prepare("INSERT INTO pessoas (id,firstname,lastname,email,telefone,dt_nascimento) values (?,?,?,?,?,?)")
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
-	_, err = stmt.Exec(pessoa.ID, pessoa.FirstName, pessoa.Email, pessoa.Telefone, pessoa.Dt_Nascimento)
+	_, err = stmt.Exec(pessoa.ID, pessoa.FirstName, pessoa.LastName, pessoa.Email, pessoa.Telefone, pessoa.Dt_Nascimento)
 	if err != nil {
 		panic(err)
 	}
@@ -82,13 +74,13 @@ func (pessoa *Pessoa) Create(db *sql.DB) error {
 
 }
 
-func Update(db *sql.DB, pessoa *Pessoa) error {
-	stmt, err := db.Prepare("UPDATE SET firstname = ?, lastname = ?, email = ?, telefone = ?, dt_nascimento = ? where id = ? ")
+func (pessoa *Pessoa) Update(db *sql.DB, id string) error {
+	stmt, err := db.Prepare("UPDATE pessoas SET firstname = ?, lastname = ?, email = ?, telefone = ?, dt_nascimento = ? where id = ? ")
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
-	_, err = stmt.Exec(pessoa.FirstName, pessoa.LastName, pessoa.Email, pessoa.Telefone, pessoa.Dt_Nascimento, pessoa.ID)
+	_, err = stmt.Exec(pessoa.FirstName, pessoa.LastName, pessoa.Email, pessoa.Telefone, pessoa.Dt_Nascimento, id)
 	if err != nil {
 		panic(err)
 	}
@@ -96,7 +88,7 @@ func Update(db *sql.DB, pessoa *Pessoa) error {
 }
 
 func Delete(db *sql.DB, id string) error {
-	stmt, err := db.Prepare("DELETE FROM pessoa where id = ?")
+	stmt, err := db.Prepare("DELETE FROM pessoas where id = ?")
 	if err != nil {
 		panic(err)
 	}
